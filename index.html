@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مختبر الطلائعيات الافتراضي - الأميبا والباراميسيوم</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
+        }
+        .glow-green {
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.3);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        .draggable-item {
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+        /* Pulse Animation for Vacuole */
+        @keyframes pulse-vacuole {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.3); opacity: 1; background-color: rgba(59, 130, 246, 0.6); }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+        .vacuole-anim {
+            animation: pulse-vacuole 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100">
+
+    <!-- Header -->
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-teal-400 flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-microscope text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-black bg-gradient-to-r from-blue-400 to-teal-300 bg-clip-text text-transparent">مختبر الطلائعيات الافتراضي</h1>
+                    <p class="text-xs text-slate-400">استكشف عالم الكائنات الحية الدقيقة وتعرف على مكوناتها ووظائفها</p>
+                </div>
+            </div>
+            <div id="nav-buttons" class="hidden md:flex gap-2">
+                <button onclick="switchScreen('home')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold transition border border-slate-700"><i class="fa-solid fa-house ml-1"></i> الرئيسية</button>
+                <button onclick="switchScreen('processes')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold transition border border-slate-700"><i class="fa-solid fa-dna ml-1"></i> العمليات والآليات</button>
+                <button onclick="switchScreen('quiz')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold transition border border-slate-700"><i class="fa-solid fa-circle-question ml-1"></i> اختبار نفسك</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center">
+
+        <!-- 1. HOME SCREEN / SELECTION -->
+        <section id="screen-home" class="screen-view active-screen flex flex-col items-center justify-center py-8">
+            <div class="text-center max-w-2xl mb-10">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold mb-4">✨ محاكاة تفاعلية ذكية للآيباد والتابلت</span>
+                <h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">اختر الكائن الحي الدقيق لبدء التجربة</h2>
+                <p class="text-slate-400 text-sm md:text-base">قم بسحب وإدراج العضيات الداخلية في مكانها الصحيح، واستكشف آلية عمل الفجوة المنقبضة والتكاثر والانقسام الثنائي.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+                <!-- Paramecium Card -->
+                <div class="bg-slate-900/90 border border-slate-800 hover:border-blue-500/50 rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 group">
+                    <div class="w-28 h-28 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center mb-5 relative overflow-hidden group-hover:scale-105 transition duration-300">
+                        <i class="fa-solid fa-shield-virus text-teal-400 text-5xl"></i>
+                        <div class="absolute inset-0 bg-teal-500/10 opacity-0 group-hover:opacity-100 transition"></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-teal-300 mb-2">الباراميسيوم (Paramecium)</h3>
+                    <p class="text-slate-400 text-xs mb-6 leading-relaxed">كائن أهدابي يعيش في المياه العذبة، يتميز بوجود نواتين وفجوات منقبضة وفم خلوي.</p>
+                    <button onclick="startLab('paramecium')" class="w-full py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 text-white font-bold text-sm shadow-lg shadow-teal-900/30 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> بدء تجربة الباراميسيوم
+                    </button>
+                </div>
+
+                <!-- Amoeba Card -->
+                <div class="bg-slate-900/90 border border-slate-800 hover:border-blue-500/50 rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 group">
+                    <div class="w-28 h-28 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center mb-5 relative overflow-hidden group-hover:scale-105 transition duration-300">
+                        <i class="fa-solid fa-bacterium text-blue-400 text-5xl"></i>
+                        <div class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition"></div>
+                    </div>
+                    <h3 class="text-xl font-bold text-blue-300 mb-2">الأميبا (Amoeba)</h3>
+                    <p class="text-slate-400 text-xs mb-6 leading-relaxed">كائن حي متغيّر الشكل يستخدم الأقدام الكاذبة للحركة واغتنام الطعام بالبلعمة.</p>
+                    <button onclick="startLab('amoeba')" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-blue-900/30 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> بدء تجربة الأميبا
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Footer Buttons -->
+            <div class="mt-12 flex flex-wrap justify-center gap-4">
+                <button onclick="switchScreen('processes')" class="px-5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-dna text-teal-400"></i> معمل العمليات الحيوية والآليات
+                </button>
+                <button onclick="switchScreen('quiz')" class="px-5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-question text-blue-400"></i> اختبار نفسك والنتيجة
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. LAB INTERACTIVE SCREEN (DRAG & DROP) -->
+        <section id="screen-lab" class="screen-view hidden flex-col">
+            <!-- Lab Top Bar -->
+            <div class="flex flex-wrap justify-between items-center bg-slate-900/90 border border-slate-800 p-4 rounded-2xl mb-4 gap-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="switchScreen('home')" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 border border-slate-700 transition"><i class="fa-solid fa-arrow-right"></i></button>
+                    <div>
+                        <h2 id="lab-title" class="text-lg font-bold text-blue-400">تجميع مكونات الخلية</h2>
+                        <p class="text-xs text-slate-400">قم بسحب العضيات وضعها في الأماكن الصحيحة المخصصة لها داخل جسم الكائن</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="score-counter" class="px-3 py-1.5 rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/20 text-xs font-bold">العضيات المثبتة: <span id="placed-count">0</span> / <span id="total-count">0</span></span>
+                    <button onclick="resetLab()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700 transition"><i class="fa-solid fa-rotate-right ml-1"></i> إعادة تعيين</button>
+                </div>
+            </div>
+
+            <!-- Lab Workspace -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Components Box (Sidebar) -->
+                <div class="lg:col-span-4 bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+                    <h3 class="text-sm font-bold text-slate-300 border-b border-slate-800 pb-2 flex items-center justify-between">
+                        <span><i class="fa-solid fa-puzzle-piece text-teal-400 ml-2"></i> المكونات والعضيات المتاحة</span>
+                        <span class="text-xs text-slate-500 font-normal">اسحب إلى الهدف</span>
+                    </h3>
+                    <div id="draggable-container" class="flex flex-col gap-2.5 max-h-[450px] overflow-y-auto pr-1">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Organism Visual Board -->
+                <div class="lg:col-span-8 bg-slate-900/90 border border-slate-800 rounded-2xl p-6 relative flex flex-col items-center justify-center min-h-[460px] overflow-hidden glow-effect">
+                    <div class="absolute top-4 right-4 bg-slate-800/80 backdrop-blur border border-slate-700 px-3 py-1 rounded-lg text-xs text-slate-300">
+                        <i class="fa-solid fa-hand-pointer text-yellow-400 ml-1"></i> انقر على العضية المثبتة لعرض بطاقة الشرح
+                    </div>
+
+                    <!-- Organism Body Container -->
+                    <div id="organism-canvas-box" class="relative w-full max-w-lg h-[380px] flex items-center justify-center border-2 border-dashed border-slate-700/60 rounded-3xl bg-slate-950/40 p-4">
+                        <!-- Background Organism SVG/Art -->
+                        <div id="organism-bg-art" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+                            <!-- Injected via JS -->
+                        </div>
+                        <!-- Drop Targets will be injected here -->
+                        <div id="drop-targets-container" class="absolute inset-0 w-full h-full"></div>
+                    </div>
+
+                    <!-- Success Message Alert -->
+                    <div id="success-banner" class="hidden absolute bottom-6 bg-teal-500/20 border border-teal-500/40 text-teal-300 px-6 py-3 rounded-2xl backdrop-blur-md flex items-center gap-3 shadow-lg animate-bounce">
+                        <i class="fa-solid fa-circle-check text-2xl text-teal-400"></i>
+                        <div>
+                            <h4 class="font-bold text-sm">ممتاز! تم تركيب جميع العضيات بنجاح</h4>
+                            <p class="text-xs text-teal-200/80">لقد أتممت دراسة مكونات هذا الكائن الحي بدقة.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. PROCESSES & MECHANISMS SCREEN -->
+        <section id="screen-processes" class="screen-view hidden flex-col">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 mb-6 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-teal-400 mb-1"><i class="fa-solid fa-dna ml-2"></i> العمليات الحيوية وآليات العمل في الطلائعيات</h2>
+                    <p class="text-xs text-slate-400">استعرض الفيديوهات التوضيحية التفاعلية لآلية عمل الفجوة المنقبضة، التغذية، الانشطار الثنائي، والاقتران.</p>
+                </div>
+                <button onclick="switchScreen('home')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700 transition">العودة للرئيسية</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 1. Contractile Vacuole Mechanism -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-sm text-blue-400"><i class="fa-solid fa-droplet ml-1"></i> آلية عمل الفجوة المنقبضة</h3>
+                            <span class="text-xs bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20">تنظيم الاتزان المائي</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            تعمل بمثابة مضخة دقيقة لطرد الماء الزائد والفضلات الذيبة حفاظاً على سلامة الخلية من الانفجار بسبب التناضح المستمر.
+                        </p>
+                        <!-- Interactive Steps Simulation -->
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-4 flex flex-col items-center justify-center min-h-[140px] relative">
+                            <div id="vacuole-sim-display" class="text-center">
+                                <div class="w-16 h-16 rounded-full bg-blue-500/20 border-2 border-blue-400 mx-auto mb-2 flex items-center justify-center vacuole-anim">
+                                    <i class="fa-solid fa-water text-blue-400 text-xl"></i>
+                                </div>
+                                <span id="vacuole-step-text" class="text-xs font-bold text-teal-300">الخطوة 1: تجميع المياه الزائدة داخل الفجوة</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="prevVacuoleStep()" class="flex-1 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold transition border border-slate-700">السابق</button>
+                        <button onclick="nextVacuoleStep()" class="flex-1 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold transition text-white shadow">التالي</button>
+                    </div>
+                </div>
+
+                <!-- 2. Binary Fission -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-sm text-teal-400"><i class="fa-solid fa-code-fork ml-1"></i> الانشطار الثنائي (التكاثر اللاجنسي)</h3>
+                            <span class="text-xs bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded border border-teal-500/20">انقسام متساوي</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            ينقسم الكائن إلى خليتين متطابقتين بعد انقسام النواة (أو النواتين في الباراميسيوم) ثم انقسام السيتوبلازم لتكوين أفراد جديدة.
+                        </p>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-4 flex flex-col items-center justify-center min-h-[140px]">
+                            <div id="fission-sim-display" class="text-center">
+                                <div class="flex items-center justify-center gap-3 mb-2">
+                                    <div class="w-12 h-16 rounded-full bg-teal-500/30 border border-teal-400 flex items-center justify-center font-bold text-xs">خلية أصلية</div>
+                                </div>
+                                <span id="fission-step-text" class="text-xs font-bold text-teal-300">المرحلة الأولى: استطالة وانقسام النواة الداخلية</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="prevFissionStep()" class="flex-1 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold transition border border-slate-700">السابق</button>
+                        <button onclick="nextFissionStep()" class="flex-1 py-2 rounded-lg bg-teal-600 hover:bg-teal-500 text-xs font-bold transition text-white shadow">التالي</button>
+                    </div>
+                </div>
+
+                <!-- 3. Conjugation in Paramecium -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 md:col-span-2 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-sm text-indigo-400"><i class="fa-solid fa-arrows-split-up-and-left ml-1"></i> عملية الاقتران في الباراميسيوم (التكاثر الجنسي المؤقت)</h3>
+                            <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20">تنوع وراثي</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            تقترب خليتان من الباراميسيوم ويتكون جسر بروتوبلازمي دقيق بينهما، يتم من خلاله تبادل أجزاء من المادة الوراثية (النواة الصغيرة) لزيادة حيوية النسل، ثم تنفصل الخليتان.
+                        </p>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-4 flex flex-col items-center justify-center min-h-[120px]">
+                            <div id="conjugation-sim-display" class="text-center">
+                                <span id="conjugation-step-text" class="text-xs font-bold text-indigo-300">1. تقارب خليتين من الباراميسيوم جنباً إلى جنب وتلامس الأغشية.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 max-w-md mx-auto w-full">
+                        <button onclick="prevConjugationStep()" class="flex-1 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold transition border border-slate-700">السابق</button>
+                        <button onclick="nextConjugationStep()" class="flex-1 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold transition text-white shadow">التالي</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. QUIZ SCREEN -->
+        <section id="screen-quiz" class="screen-view hidden flex-col max-w-2xl mx-auto w-full">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 mb-4 shadow-xl">
+                <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-blue-400"><i class="fa-solid fa-clipboard-question ml-2"></i> اختبر نفسك - مختبر الطلائعيات</h2>
+                        <p class="text-xs text-slate-400">أجب عن الأسئلة التالية لاختبار مدى استيعابك للمعلومات</p>
+                    </div>
+                    <span id="quiz-progress" class="px-3 py-1 rounded-xl bg-slate-800 text-xs text-slate-300 font-bold">السؤال 1 / 5</span>
+                </div>
+
+                <div id="quiz-question-box">
+                    <!-- Question injected by JS -->
+                </div>
+
+                <div id="quiz-controls" class="mt-6 flex justify-between items-center pt-4 border-t border-slate-800">
+                    <button onclick="switchScreen('home')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 transition">العودة للرئيسية</button>
+                    <button id="next-quiz-btn" onclick="nextQuizQuestion()" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition hidden">السؤال التالي <i class="fa-solid fa-arrow-left mr-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. QUIZ RESULT SCREEN -->
+        <section id="screen-result" class="screen-view hidden flex-col max-w-md mx-auto w-full text-center">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl">
+                <div class="w-24 h-24 rounded-full bg-teal-500/10 border-2 border-teal-500/30 flex items-center justify-center mx-auto mb-6">
+                    <i class="fa-solid fa-award text-teal-400 text-4xl"></i>
+                </div>
+                <h2 class="text-2xl font-black text-white mb-2">أحسنت لقد أتممت الاختبار!</h2>
+                <p class="text-slate-400 text-xs mb-6">لقد أظهرت فهماً ممتازاً لمكونات ووظائف الكائنات الحية الدقيقة.</p>
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 mb-6">
+                    <span class="text-xs text-slate-400 block mb-1">النتيجة النهائية</span>
+                    <span id="final-score-text" class="text-3xl font-black text-teal-400">5 / 5</span>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <button onclick="restartQuiz()" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-lg">إعادة الاختبار</button>
+                    <button onclick="switchScreen('home')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition border border-slate-700">العودة للرئيسية</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Info Modal for Organelle Details -->
+    <div id="info-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center gap-3 mb-4">
+                <div id="modal-icon" class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg"></div>
+                <h3 id="modal-title" class="font-bold text-base text-white"></h3>
+            </div>
+            <p id="modal-desc" class="text-xs text-slate-300 leading-relaxed mb-6"></p>
+            <button onclick="closeModal()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition border border-slate-700">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Data Definitions for Paramecium and Amoeba
+        const labData = {
+            paramecium: {
+                title: "تجربة كائن الباراميسيوم (Paramecium)",
+                bgArt: `<svg viewBox="0 0 200 100" class="w-full h-full text-teal-500/30"><ellipse cx="100" cy="50" rx="90" ry="40" fill="currentColor" stroke="#14b8a6" stroke-width="2" stroke-dasharray="4"/></svg>`,
+                components: [
+                    { id: 'cilia', name: 'الأهداب', desc: 'تتحرك بشكل متناسق لتدفع الكائن في الماء وتساعده في جمع الطعام.', icon: 'fa-feather', x: '5%', y: '35%' },
+                    { id: 'vacuole', name: 'الفجوة المنقبضة', desc: 'تعمل كمضخة دقيقة لتخليص الخلية من الماء الزائد والفضلات.', icon: 'fa-droplet', x: '80%', y: '20%' },
+                    { id: 'macro_nucleus', name: 'النواة الكبيرة', desc: 'مسؤولة عن تنظيم الأنشطة الحيوية اليومية للخلية.', icon: 'fa-circle-dot', x: '50%', y: '45%' },
+                    { id: 'micro_nucleus', name: 'النواة الصغيرة', desc: 'مسؤولة عن العمليات الوراثية وعملية الاقتران والتكاثر.', icon: 'fa-circle', x: '60%', y: '55%' },
+                    { id: 'oral_groove', name: 'الفم الخلوي', desc: 'تجويف جانبي يدخل من خلاله الغذاء إلى داخل الخلية.', icon: 'fa-utensils', x: '35%', y: '70%' },
+                    { id: 'food_vacuole', name: 'المُدخرات الغذائية', desc: 'فجوات مؤقتة لهضم الطعام وامتصاص العناصر الغذائية.', icon: 'fa-bowl-food', x: '45%', y: '25%' }
+                ]
+            },
+            amoeba: {
+                title: "تجربة كائن الأميبا (Amoeba)",
+                bgArt: `<svg viewBox="0 0 200 120" class="w-full h-full text-blue-500/30"><path d="M40,60 Q20,20 70,30 T130,20 Q180,40 160,80 T110,105 Q60,110 40,60 Z" fill="currentColor" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4"/></svg>`,
+                components: [
+                    { id: 'nucleus', name: 'النواة', desc: 'تنظم العمليات الحيوية وتحتوي على المادة الوراثية للخلية.', icon: 'fa-circle-dot', x: '55%', y: '30%' },
+                    { id: 'membrane', name: 'الغشاء البلازمي', desc: 'يحمي الخلية وينظم تبادل المواد والغازات مع المحيط.', icon: 'fa-shield', x: '85%', y: '50%' },
+                    { id: 'pseudopodia', name: 'الأقدام الكاذبة', desc: 'امتدادات سيتوبلازمية تستخدم للحركة واغتنام الطعام بالبلعمة.', icon: 'fa-hand', x: '15%', y: '65%' },
+                    { id: 'amoeba_vacuole', name: 'الفجوة المنقبضة', desc: 'تتخلص من الماء الزائد والاتزان الأسموزي للخلية.', icon: 'fa-droplet', x: '40%', y: '60%' }
+                ]
+            }
+        };
+
+        let currentType = 'paramecium';
+        let placedComponents = {};
+        let activeDraggable = null;
+
+        // Screen Switcher
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen-view').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            });
+            const target = document.getElementById('screen-' + screenId);
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('flex');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // Start Lab
+        function startLab(type) {
+            currentType = type;
+            placedComponents = {};
+            const data = labData[type];
+            document.getElementById('lab-title').innerText = data.title;
+            document.getElementById('organism-bg-art').innerHTML = data.bgArt;
+            document.getElementById('total-count').innerText = data.components.length;
+            document.getElementById('placed-count').innerText = '0';
+            document.getElementById('success-banner').classList.add('hidden');
+
+            renderDraggables();
+            renderDropTargets();
+            switchScreen('lab');
+        }
+
+        // Render Draggable Side Items
+        function renderDraggables() {
+            const container = document.getElementById('draggable-container');
+            container.innerHTML = '';
+            labData[currentType].components.forEach(comp => {
+                if (!placedComponents[comp.id]) {
+                    const el = document.createElement('div');
+                    el.className = 'draggable-item bg-slate-800/90 border border-slate-700 p-3 rounded-xl flex items-center justify-between hover:bg-slate-800 transition select-none';
+                    el.draggable = true;
+                    el.dataset.id = comp.id;
+                    el.innerHTML = `
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-xs"><i class="fa-solid ${comp.icon}"></i></div>
+                            <span class="text-xs font-bold text-slate-200">${comp.name}</span>
+                        </div>
+                        <i class="fa-solid fa-grip-vertical text-slate-600 text-xs"></i>
+                    `;
+
+                    // Drag Events for Desktop & Touch simulation
+                    el.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', comp.id);
+                    });
+
+                    // Click to place for Touch Devices (iPad friendly)
+                    el.addEventListener('click', () => {
+                        placeComponent(comp.id);
+                    });
+
+                    container.appendChild(el);
+                }
+            });
+
+            if (container.children.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">تم تركيب جميع العضيات بنجاح! 🎉</div>`;
+            }
+        }
+
+        // Render Drop Targets on Organism Board
+        function renderDropTargets() {
+            const container = document.getElementById('drop-targets-container');
+            container.innerHTML = '';
+            labData[currentType].components.forEach(comp => {
+                const target = document.createElement('div');
+                target.className = 'absolute w-10 h-10 -ml-5 -mt-5 rounded-full flex items-center justify-center transition-all duration-300';
+                target.style.left = comp.x;
+                target.style.top = comp.y;
+
+                if (placedComponents[comp.id]) {
+                    target.className += ' bg-teal-500/20 border-2 border-teal-400 text-teal-300 shadow-lg cursor-pointer animate-pulse';
+                    target.innerHTML = `<i class="fa-solid ${comp.icon} text-sm"></i>`;
+                    target.onclick = () => showModal(comp.name, comp.desc, comp.icon);
+                } else {
+                    target.className += ' bg-blue-500/20 border-2 border-dashed border-blue-400/60 text-blue-400 hover:scale-125';
+                    target.innerHTML = `<i class="fa-solid fa-plus text-xs"></i>`;
+                    
+                    target.addEventListener('dragover', (e) => e.preventDefault());
+                    target.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        const id = e.dataTransfer.getData('text/plain');
+                        if (id === comp.id) {
+                            placeComponent(id);
+                        }
+                    });
+                }
+                container.appendChild(target);
+            });
+        }
+
+        // Place Component Logic
+        function placeComponent(id) {
+            if (!placedComponents[id]) {
+                placedComponents[id] = true;
+                const count = Object.keys(placedComponents).length;
+                document.getElementById('placed-count').innerText = count;
+                renderDraggables();
+                renderDropTargets();
+
+                if (count === labData[currentType].components.length) {
+                    document.getElementById('success-banner').classList.remove('hidden');
+                }
+            }
+        }
+
+        function resetLab() {
+            placedComponents = {};
+            document.getElementById('success-banner').classList.add('hidden');
+            document.getElementById('placed-count').innerText = '0';
+            renderDraggables();
+            renderDropTargets();
+        }
+
+        // Modal Controls
+        function showModal(title, desc, icon) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('modal-icon').innerHTML = `<i class="fa-solid ${icon}"></i>`;
+            document.getElementById('info-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('info-modal').classList.add('hidden');
+        }
+
+        // Processes Simulators
+        let vacuoleStep = 1;
+        const vacuoleSteps = [
+            { text: "الخطوة 1: تجمع المياه الزائدة والفضلات من السيتوبلازم تدريجياً داخل الفجوة.", icon: "fa-water" },
+            { text: "الخطوة 2: تزداد الفجوة المنقبضة في الحجم بامتصاص المزيد من الماء.", icon: "fa-circle-notch fa-spin" },
+            { text: "الخطوة 3: تقترب الفجوة من الغشاء البلازمي للخلية استعداداً للتخلص من السوائل.", icon: "fa-arrows-to-dot" },
+            { text: "الخطوة 4: تنقبض الفجوة بقوة وتطرد الماء الزائد خارج الخلية نهائياً للحفاظ على الاتزان.", icon: "fa-bolt" }
+        ];
+        function nextVacuoleStep() {
+            vacuoleStep = vacuoleStep < 4 ? vacuoleStep + 1 : 1;
+            updateVacuoleDisplay();
+        }
+        function prevVacuoleStep() {
+            vacuoleStep = vacuoleStep > 1 ? vacuoleStep - 1 : 4;
+            updateVacuoleDisplay();
+        }
+        function updateVacuoleDisplay() {
+            const s = vacuoleSteps[vacuoleStep - 1];
+            document.getElementById('vacuole-step-text').innerText = s.text;
+        }
+
+        let fissionStep = 1;
+        const fissionSteps = [
+            "المرحلة الأولى: استطالة وانقسام النواة (الكبيرة والصغيرة أو نواة الأميبا) إلى نواتين.",
+            "المرحلة الثانية: يبدأ تخصر السيتوبلازم وتوزيعه بالتساوي بين جزئي الخلية.",
+            "المرحلة الثالثة: تنقسم الخلية بالكامل إلى خليتين ابنتين متطابقتين تماماً للأصل."
+        ];
+        function nextFissionStep() {
+            fissionStep = fissionStep < 3 ? fissionStep + 1 : 1;
+            document.getElementById('fission-step-text').innerText = fissionSteps[fissionStep - 1];
+        }
+        function prevFissionStep() {
+            fissionStep = fissionStep > 1 ? fissionStep - 1 : 3;
+            document.getElementById('fission-step-text').innerText = fissionSteps[fissionStep - 1];
+        }
+
+        let conjugationStep = 1;
+        const conjugationSteps = [
+            "1. تقارب خليتين من الباراميسيوم جنباً إلى جنب وتلامس الأغشية بدقة.",
+            "2. تكوين جسر بروتوبلازمي رفيع بين الخليتين عند نقطة التلامس.",
+            "3. انقسام ونقل وتبادل قطع من المادة الوراثية (النواة الصغيرة) عبر الجسر البروتوبلازمي.",
+            "4. انفصال الخليتين بعد اكتمال التبادل الوراثي لتبدأ كل منهما بالانقسام بنجاح."
+        ];
+        function nextConjugationStep() {
+            conjugationStep = conjugationStep < 4 ? conjugationStep + 1 : 1;
+            document.getElementById('conjugation-step-text').innerText = conjugationSteps[conjugationStep - 1];
+        }
+        function prevConjugationStep() {
+            conjugationStep = conjugationStep > 1 ? conjugationStep - 1 : 4;
+            document.getElementById('conjugation-step-text').innerText = conjugationSteps[conjugationStep - 1];
+        }
+
+        // Quiz Logic
+        const quizData = [
+            {
+                q: "ما هي العضية المسؤول الأول عن إخراج الماء الزائد في الباراميسيوم والأميبا؟",
+                options: ["النواة الكبيرة", "الفجوة المنقبضة", "الأهداب", "الفم الخلوي"],
+                correct: 1
+            },
+            {
+                q: "أي من الكائنات التالية يستخدم 'الأقدام الكاذبة' للحركة واغتنام الطعام؟",
+                options: ["الباراميسيوم", "اليوجلينا", "الأميبا", "براميسيوم مقترن"],
+                correct: 2
+            },
+            {
+                q: "ما هي وظيفة النواة الكبيرة في الباراميسيوم؟",
+                options: ["التكاثر الجنسي فقط", "تنظيم الأنشطة الحيوية اليومية", "تكوين الأهداب", "البلعمة المباشرة"],
+                correct: 1
+            },
+            {
+                q: "تسمى القناة الدقيقة التي تتكون أثناء التزاوج في الباراميسيوم بـ:",
+                options: ["القناة الهضمية", "الجسر البروتوبلازمي", "الغشاء البلازمي", "الفجوة الغذائية"],
+                correct: 1
+            },
+            {
+                q: "كيف تتكاثر الأميبا في الظروف العادية لاجنسياً؟",
+                options: ["بالتبرعم", "بالانشطار الثنائي", "بالاقتران", "تكوين الأبواغ"],
+                correct: 1
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let selectedOption = null;
+
+        function loadQuizQuestion() {
+            const q = quizData[currentQuizIndex];
+            document.getElementById('quiz-progress').innerText = `السؤال ${currentQuizIndex + 1} / ${quizData.length}`;
+            selectedOption = null;
+            document.getElementById('next-quiz-btn').classList.add('hidden');
+
+            let html = `
+                <h3 class="font-bold text-sm md:text-base text-slate-200 mb-4">${q.q}</h3>
+                <div class="flex flex-col gap-2.5">
+            `;
+            q.options.forEach((opt, idx) => {
+                html += `
+                    <button onclick="selectQuizOption(${idx})" id="opt-${idx}" class="w-full text-right p-3 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition flex items-center justify-between">
+                        <span>${opt}</span>
+                        <div class="w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center text-[10px]"></div>
+                    </button>
+                `;
+            });
+            html += `</div>`;
+            document.getElementById('quiz-question-box').innerHTML = html;
+        }
+
+        function selectQuizOption(idx) {
+            selectedOption = idx;
+            const q = quizData[currentQuizIndex];
+            
+            document.querySelectorAll('[id^="opt-"]').forEach((btn, i) => {
+                btn.className = "w-full text-right p-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between ";
+                if (i === q.correct) {
+                    btn.className += "bg-teal-500/20 border-teal-500 text-teal-300";
+                } else if (i === idx) {
+                    btn.className += "bg-red-500/20 border-red-500 text-red-300";
+                } else {
+                    btn.className += "bg-slate-800/40 border-slate-800 text-slate-500 opacity-50";
+                }
+            });
+
+            if (idx === q.correct) {
+                score++;
+            }
+
+            document.getElementById('next-quiz-btn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                document.getElementById('final-score-text').innerText = `${score} / ${quizData.length}`;
+                switchScreen('result');
+            }
+        }
+
+        function restartQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            loadQuizQuestion();
+            switchScreen('quiz');
+        }
+
+        // Initialize Quiz on load
+        loadQuizQuestion();
+    </script>
+</body>
+</html>
